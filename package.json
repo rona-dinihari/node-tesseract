@@ -1,12 +1,12 @@
 {
-  "name": "node-tesseract",
+  "name": "huedawn-tesseract",
   "version": "0.2.7",
-  "author": "Desmond Morris <hi@desmondmorris.com>",
-  "description": "A simple wrapper for the Tesseract OCR package",
+  "author": "Rona Dini Hari <rona@huedawn.me>",
+  "description": "A fork of a simple wrapper for the Tesseract OCR package",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/desmondmorris/node-tesseract/"
+    "url": "git@bitbucket.org:rona_dinihari/node-tesseract.git"
   },
   "keywords": [
     "tesseract",

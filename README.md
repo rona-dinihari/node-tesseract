@@ -1,3 +1,5 @@
+Forked from https://github.com/desmondmorris/node-tesseract/ to support tesseract v4.
+
 # Tesseract for node.js
 
 [![NPM](https://nodei.co/npm/node-tesseract.png)](https://nodei.co/npm/node-tesseract/)
