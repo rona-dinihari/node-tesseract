@@ -1,6 +1,6 @@
 {
   "name": "huedawn-tesseract",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "author": "Rona Dini Hari <rona@huedawn.me>",
   "description": "A fork of a simple wrapper for the Tesseract OCR package",
   "main": "index.js",
