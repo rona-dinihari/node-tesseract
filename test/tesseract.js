@@ -17,3 +17,16 @@ describe('process', function(){
   })
 })
 
+describe('orientation', function(){
+  it('returns orientation equal to 0 using psm 1', function(done){
+
+    var testImage = __dirname + '/test.png';
+
+    tesseract.process(testImage, { psm: 1 }, function(err, text, extra) {
+      extra.orientation.should.equal(0);
+      done();
+    });
+
+  })
+})
+
