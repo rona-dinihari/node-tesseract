@@ -21,12 +21,12 @@ The above will install all of the language packages available, if you don't need
 
 You can then go about installing the node-module to expose the JavaScript API:
 
-    npm install node-tesseract
+    npm install dawnsparks-node-tesseract
 
 ## Usage
 
 ```JavaScript
-var tesseract = require('node-tesseract');
+var tesseract = require('dawnsparks-node-tesseract');
 
 // Recognize text of any language in any format
 tesseract.process(__dirname + '/path/to/image.jpg',function(err, text) {
