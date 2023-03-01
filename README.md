@@ -55,6 +55,9 @@ tesseract.process(__dirname + '/path/to/image.jpg', options, function(err, text)
 ```
 
 ## Changelog
+* **0.4.0**: Fix injection vulnarabilty
+* **0.3.3**: Returns extra orientation for psm 1
+* **0.3.2**: Support Tesseract v4
 * **0.2.7**: Adds output file extension detection
 * **0.2.6**: Catches exception when deleting tmp files that do not exist
 * **0.2.5**: Preserves whitespace and replaces tmp module
