@@ -2,6 +2,8 @@
 
 var tesseract = require('../lib/tesseract');
 var should = require('should');
+const path = require('path');
+const fs = require('fs');
 
 
 describe('process', function(){
@@ -32,3 +34,34 @@ describe('orientation', function(){
   })
 })
 
+describe('poc0', function() {
+
+  it('must not create file called \'success\'', function(done) {
+
+    var testFile = path.join(__dirname, '..', 'success');
+    var testFileWin = path.join(__dirname, '..', 'success);#.txt'); // Windows
+    var x = "$(touch success);#";
+
+    before(function (doneBefore) {
+      if (fs.existsSync(testFile)) fs.unlinkSync(testFile);
+      if (fs.existsSync(testFileWin)) fs.unlinkSync(testFileWin);
+      doneBefore();
+    });
+      
+    after(function(doneAfter) {      
+      if (fs.existsSync(testFile)) fs.unlinkSync(testFile);
+      if (fs.existsSync(testFileWin)) fs.unlinkSync(testFileWin);
+      doneAfter();
+    });
+
+    tesseract.process(x,function(err, text, extra) {
+
+      should.equal(text, null);
+
+      var result = fs.existsSync(testFile) || fs.existsSync(testFileWin);
+
+      result.should.equal(false);
+      done();
+    });
+  });
+});
