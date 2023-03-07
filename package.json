@@ -1,12 +1,12 @@
 {
   "name": "dawnsparks-node-tesseract",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "author": "Rona Dini Hari <hari.ronadini@gmail.com>",
   "description": "A fork of a simple wrapper for the Tesseract OCR package",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://rona_dinihari@bitbucket.org/dawnsparks/dawnsparks-node-tesseract.git"
+    "url": "https://github.com/rona-dinihari/dawnsparks-node-tesseract.git"
   },
   "keywords": [
     "tesseract",

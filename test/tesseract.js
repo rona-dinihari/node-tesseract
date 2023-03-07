@@ -9,28 +9,32 @@ const fs = require('fs');
 describe('process', function(){
   it('should return the string "node-tesseract"', function(done){
 
-    var testImage = "\"" + __dirname + '/test.png' + "\"";
+    var testImage = path.join(__dirname, 'test with spaces.png');
 
     tesseract.process(testImage, function(err, text) {
-      text.trim().should.equal('node-tesseract');
-      done();
+      if (err) {
+        done(err);
+      } else {
+        text.trim().should.equal('node-tesseract');
+        done();
+      }
     });
-
-    done();
   })
 })
 
 describe('orientation', function(){
   it('returns orientation equal to 0 using psm 1', function(done){
 
-    var testImage = "\"" + __dirname + '/test.png' + "\"";
+    var testImage = path.join(__dirname, 'test with spaces.png');
 
     tesseract.process(testImage, { psm: 1 }, function(err, text, extra) {
-      extra.orientation.should.equal(0);
-      done();
+      if (err) {
+        done(err);
+      } else {
+        extra.orientation.should.equal(0);
+        done();
+      }
     });
-
-    done();
   })
 })
 
