@@ -2,8 +2,6 @@ Forked from https://github.com/desmondmorris/node-tesseract/ to support tesserac
 
 # Tesseract for node.js
 
-[![NPM](https://nodei.co/npm/node-tesseract.png)](https://nodei.co/npm/node-tesseract/)
-
 A simple wrapper for the Tesseract OCR package for node.js
 
 ## Requirements
@@ -55,6 +53,8 @@ tesseract.process(__dirname + '/path/to/image.jpg', options, function(err, text)
 ```
 
 ## Changelog
+* **0.4.2**: Polynomial regular expression used on uncontrolled data
+* **0.4.1**: exec() to execFile()
 * **0.4.0**: Fix injection vulnarabilty
 * **0.3.3**: Returns extra orientation for psm 1
 * **0.3.2**: Support Tesseract v4
