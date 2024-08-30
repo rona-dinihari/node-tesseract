@@ -6,7 +6,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rona-dinihari/dawnsparks-node-tesseract.git"
+    "url": "https://github.com/rona-dinihari/node-tesseract.git"
   },
   "keywords": [
     "tesseract",
