@@ -1,4 +1,4 @@
-Forked from https://github.com/desmondmorris/node-tesseract/ to support tesseract v4.
+Forked from https://github.com/desmondmorris/node-tesseract/ to support tesseract version 4 and up to version 5.
 
 # Tesseract for node.js
 
