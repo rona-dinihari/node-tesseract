@@ -32,10 +32,10 @@ jobs:
       - run:
           name: "Install, test, and deploy."
           command: |
-            apt-get update && apt-get upgrade -y && apt-get install -y apt-transport-https
+            sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y apt-transport-https
             echo "deb https://notesalexp.org/tesseract-ocr5/$(lsb_release -cs)/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/notesalexp.list > /dev/null
             wget -O - https://notesalexp.org/debian/alexp_key.asc | sudo apt-key add -
-            apt-get update && apt-get install -y tesseract-ocr
+            sudo apt-get update && sudo apt-get install -y tesseract-ocr
             npm ci
             npm test
             npm publish
