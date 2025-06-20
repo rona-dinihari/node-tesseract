@@ -4,6 +4,8 @@ Forked from https://github.com/desmondmorris/node-tesseract/ to support tesserac
 
 A simple wrapper for the Tesseract OCR package for node.js
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/rona-dinihari/node-tesseract/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/rona-dinihari/node-tesseract/tree/main)
+
 ## Requirements
 
 * Tesseract 3.01 or higher is needed for this to work
