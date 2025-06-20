@@ -3,7 +3,7 @@
 version: 2.1
 # include Kubernetes orb definition orbs:
 orbs:
-  kubernetes: circleci/kubernetes@1.33.1
+  node: circleci/node@7.1.0
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
@@ -26,20 +26,19 @@ jobs:
           command: "echo Hello, World!"
   deploy-app:
     docker:
-      - image: cimg/base:current
+      - image: cimg/node:lts
     steps:
       - checkout
       - run:
-          name: Generate deployment config and deploy
+          name: "Install, test, and deploy."
           command: |
-          # replace variable placeholders with envsubst
-          envsubst < src/manifests/deployment.yaml > src/manifests/deployment-rendered.yaml
-          # install kubectl
-          - kubernetes/install-kubectl
-          # deploy rendered manifest
-          - kubernetes/create-or-update-resource:
-            resource-file-path: src/manifests/deployment-rendered.yaml
-            resource-name: deployment/my-app-deployment
+            sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y apt-transport-https
+            echo "deb https://notesalexp.org/tesseract-ocr5/$(lsb_release -cs)/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/notesalexp.list > /dev/null
+            wget -O - https://notesalexp.org/debian/alexp_key.asc | sudo apt-key add -
+            sudo apt-get update && sudo apt-get install -y tesseract-ocr
+            npm ci
+            npm test
+            npm publish
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
@@ -48,3 +47,6 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - say-hello
+  deploy-app-workflow:
+    jobs:
+      - deploy-app
