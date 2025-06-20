@@ -36,7 +36,7 @@ jobs:
             echo "deb https://notesalexp.org/tesseract-ocr5/$(lsb_release -cs)/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/notesalexp.list > /dev/null
             wget -O - https://notesalexp.org/debian/alexp_key.asc | sudo apt-key add -
             sudo apt-get update && sudo apt-get install -y tesseract-ocr
-            npm login --auth-type=legacy
+            # npm login --auth-type=legacy
             npm ci
             npm test
             npm publish
