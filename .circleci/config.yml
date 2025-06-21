@@ -29,4 +29,5 @@ jobs:
 workflows:
   deploy-app-workflow:
     jobs:
-      - deploy-app
+      - deploy-app:
+          context: dawnsparks-node-tesseract
