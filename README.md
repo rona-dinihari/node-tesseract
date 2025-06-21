@@ -1,8 +1,10 @@
-Forked from https://github.com/desmondmorris/node-tesseract/ to support tesseract v4.
+Forked from https://github.com/desmondmorris/node-tesseract/ to support tesseract version 4 and up to version 5.
 
 # Tesseract for node.js
 
 A simple wrapper for the Tesseract OCR package for node.js
+
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/rona-dinihari/node-tesseract/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/rona-dinihari/node-tesseract/tree/main)
 
 ## Requirements
 
@@ -53,6 +55,7 @@ tesseract.process(__dirname + '/path/to/image.jpg', options, function(err, text)
 ```
 
 ## Changelog
+* **0.4.5**: Security update
 * **0.4.4**: Audit fix
 * **0.4.3**: Security update
 * **0.4.2**: Polynomial regular expression used on uncontrolled data
