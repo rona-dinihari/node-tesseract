@@ -3,16 +3,30 @@
   "version": "0.4.5",
   "author": "Rona Dini Hari <hari.ronadini@gmail.com>",
   "description": "A fork of a simple wrapper for the Tesseract OCR package",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/rona-dinihari/node-tesseract.git"
-  },
   "keywords": [
     "tesseract",
     "ocr",
     "text recognition"
   ],
+  "homepage": "https://github.com/rona-dinihari/node-tesseract#readme",
+  "bugs": {
+    "url": "https://github.com/rona-dinihari/node-tesseract/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rona-dinihari/node-tesseract.git"
+  },
+  "license": "MIT",
+  "author": "Rona Dini Hari <hari.ronadini@gmail.com>",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
   "dependencies": {
     "glob": "^9.3.5",
     "uuid": "^9.0.1"
@@ -21,10 +35,6 @@
     "mocha": "^10.6.0",
     "should": "~2.1.1"
   },
-  "scripts": {
-    "test": "mocha"
-  },
-  "license": "MIT",
   "engine": {
     "node": ">=0.6"
   }
