@@ -27,10 +27,6 @@ jobs:
             npm ci
             npm test
   deploy:
-    filters:  # using regex filters requires the entire branch to match
-      branches:
-        only:  # only branches matching the below regex filters will run
-          - main
     requires: build_and_test
     docker:
       - image: cimg/node:lts
@@ -82,6 +78,10 @@ workflows:
       - on_success
       - on_fail
   deployment-workflow:
+    filters:  # using regex filters requires the entire branch to match
+      branches:
+        only:  # only branches matching the below regex filters will run
+          - main
     jobs:
       - deploy
       - on_success
