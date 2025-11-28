@@ -57,7 +57,7 @@ tesseract.process(__dirname + '/path/to/image.jpg', options, function(err, text)
 
 ## Changelog
 
-- **0.4.6**: Security update
+- **0.4.7**: Security update
 - **0.4.5**: Security update
 - **0.4.4**: Audit fix
 - **0.4.3**: Security update
