@@ -29,7 +29,7 @@ jobs:
           name: Install Tesseract OCR
           command: |
             echo "Install Tesseract OCR."
-            sudo apt-get update && sudo apt-get install upgrade
+            sudo apt-get update && sudo apt-get upgrade
             sudo apt-get install tesseract-ocr -y
 
       - checkout
