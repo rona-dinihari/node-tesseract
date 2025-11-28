@@ -101,7 +101,8 @@ jobs:
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
   version: 2
-  test-and-deploy:
+
+  test:
     jobs:
       - test:
           filters:
@@ -109,16 +110,14 @@ workflows:
               # Run tests on *all* tags as well (so we can verify before publish)
               only: /.*/
 
-  version: 2
   test-and-deploy:
-    when: pipeline.git.branch == "main"
+    when: << pipeline.git.branch >> == "main"
     jobs:
       - test:
           filters:
             tags:
               # Run tests on *all* tags as well (so we can verify before publish)
               only: /.*/
-
       - deploy:
           requires:
             - test
