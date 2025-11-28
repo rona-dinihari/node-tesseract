@@ -2,83 +2,137 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
+# ------------------------------------------------------------------
+#  GLOBAL SETTINGS
+# ------------------------------------------------------------------
+orbs:
+  # Optional – the Node orb gives you handy commands (install, test, etc.)
+  node: circleci/node@7.2.1 # keep the version bumped in the future
+
+executors:
+  # Re‑use the same Docker image for all jobs
+  node-executor:
+    docker:
+      - image: cimg/node:lts # LTS Node version, automatically gets security patches
+    working_directory: ~/workspace/node-tesseract-js
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
-  build_and_test:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - checkout
-      - run:
-          name: "Install tesseract OCR."
-          command: |
-            sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y apt-transport-https
-            sudo apt-get update && sudo apt-get install -y tesseract-ocr
-      - run:
-          name: "Install dependencies, and run tests."
-          context: dawnsparks-node-tesseract
-          command: |
-            # touch ~/.npmrc
-            # echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN" >> ~/.npmrc
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-            npm ci
-            npm test
-  deploy:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - checkout
-      - run:
-          name: "Install tesseract OCR."
-          command: |
-            sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y apt-transport-https
-            sudo apt-get install -y tesseract-ocr
-      - run:
-          name: "Install dependencies, run tests, and publish package."
-          context: dawnsparks-node-tesseract
-          command: |
-            # touch ~/.npmrc
-            # echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN" >> ~/.npmrc
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-            npm ci
-            npm publish
-      - run:
-          name: "Deploy to npmjs.com."
-          context: dawnsparks-node-tesseract
-          command: |
-            circleci run release plan \
-              --environment-name="npm" \
-              --component-name="<component-name>" \
-              --target-version="<some-version-name>"
-  on_success:
-    docker:
-      - image: cimg/node:lts
+  # --------------------------------------------------------------
+  # 1️⃣ Test job – runs on every push
+  # --------------------------------------------------------------
+  test:
+    executor: node-executor
     steps:
       - run:
-          name: "Update a deploy to SUCCESS"
-          command: circleci run release update --status=SUCCESS 
-          when: on_success
-  on_fail:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - run:
-          name: "Update planned deploy to FAILED"
-          command: circleci run release update --status=FAILED
-          when: on_fail
+          name: Install Tesseract OCR
+          command: |
+            echo "Install Tesseract OCR."
+            sudo apt-get update && sudo apt-get upgrade
+            sudo apt-get install tesseract-ocr -y
 
+      - checkout
+
+      # Restore cached node_modules (key includes checksum of package-lock.json)
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "package-lock.json" }}
+            - v1-node-modules-
+
+      # Install dependencies
+      - node/install # use orb's install command (replaces npm ci)
+
+      # Save the fresh node_modules for the next run
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-node-modules-{{ checksum "package-lock.json" }}
+
+      # Run your test suite (adjust if you use yarn, jest, mocha, etc.)
+      - run:
+          name: Run tests
+          command: npm test
+
+      # Persist the workspace so the deploy job can see the same source tree
+      - persist_to_workspace:
+          root: ~/workspace/node-tesseract-js
+          paths:
+            - .
+
+      - store_test_results:
+          path: test-results
+
+      - store_artifacts:
+          path: test-results
+
+  # --------------------------------------------------------------
+  # 2️⃣ Deploy job – runs **only** on tags that match vX.Y.Z
+  # --------------------------------------------------------------
+  deploy:
+    executor: node-executor
+    steps:
+      - attach_workspace:
+          at: ~/workspace/node-tesseract-js
+
+      # ----------------------------------------------------------------
+      # 2.1 Create .npmrc with the auth token (stored as an env‑var)
+      # ----------------------------------------------------------------
+      - run:
+          name: Configure npm authentication
+          command: |
+            # CircleCI masks the value of $NPM_TOKEN in the UI
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+
+      # ----------------------------------------------------------------
+      # 2.2 Publish the package
+      # ----------------------------------------------------------------
+      - run:
+          name: Publish to npm
+          command: |
+            # Optional: make sure the version in package.json matches the git tag
+            # (fails the build if they diverge)
+            TAG_VERSION="${CIRCLE_TAG#v}"
+            PKG_VERSION=$(node -p "require('./package.json').version")
+            if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+              echo "❌ Tag version ($TAG_VERSION) does not match package.json version ($PKG_VERSION)"
+              exit 1
+            fi
+
+            npm publish --access public   # remove --access for private registries
+          # Use the npm token stored in CircleCI project settings
+          environment:
+            NPM_TOKEN: ${NPM_TOKEN}
+
+# ------------------------------------------------------------------
+# 3️⃣ WORKFLOW
+# ------------------------------------------------------------------
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
-  test-workflow:
+  build-and-test:
     jobs:
-      - build_and_test
-  deployment-workflow:
-    when: pipeline.git.branch == "main"
+      - test:
+          filters:
+            tags:
+              # Run tests on *all* tags as well (so we can verify before publish)
+              only: /.*/
+
+  build-and-deploy:
+    when: << pipeline.git.branch >> == "main"
     jobs:
-      - deploy
-      - on_success
-      - on_fail
-
-
+      - test:
+          filters:
+            tags:
+              # Run tests on *all* tags as well (so we can verify before publish)
+              only: /.*/
+      - deploy:
+          requires:
+            - test
+          filters:
+            # Deploy only on tags that look like v1.2.3 (adjust regex to your convention)
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+            branches:
+              # Never run deploy on a plain branch push
+              ignore: /.*/
