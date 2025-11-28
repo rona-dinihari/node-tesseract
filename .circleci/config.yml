@@ -118,7 +118,7 @@ workflows:
               # Run tests on *all* tags as well (so we can verify before publish)
               only: /.*/
 
-  test-and-deploy:
+  build-and-deploy:
     when: << pipeline.git.branch >> == "main"
     jobs:
       - test:
