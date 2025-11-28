@@ -33,7 +33,7 @@ jobs:
           name: "Install tesseract OCR."
           command: |
             sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y apt-transport-https
-            sudo apt-get update && sudo apt-get install -y tesseract-ocr
+            sudo apt-get install -y tesseract-ocr
       - run:
           name: "Install dependencies, run tests, and publish package."
           context: dawnsparks-node-tesseract
@@ -74,12 +74,11 @@ workflows:
   test-workflow:
     jobs:
       - build_and_test
-      - on_success
-      - on_fail
   deployment-workflow:
     when: pipeline.git.branch == "main"
     jobs:
       - deploy
       - on_success
       - on_fail
+
 
