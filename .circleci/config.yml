@@ -7,13 +7,13 @@ version: 2.1
 # ------------------------------------------------------------------
 orbs:
   # Optional – the Node orb gives you handy commands (install, test, etc.)
-  node: circleci/node@5.0   # keep the version bumped in the future
+  node: circleci/node@7.2.1 # keep the version bumped in the future
 
 executors:
   # Re‑use the same Docker image for all jobs
   node-executor:
     docker:
-      - image: cimg/node:lts   # LTS Node version, automatically gets security patches
+      - image: cimg/node:lts # LTS Node version, automatically gets security patches
     working_directory: ~/workspace/node-tesseract-js
 
 # Define a job to be invoked later in a workflow.
@@ -33,10 +33,8 @@ jobs:
             - v1-node-modules-{{ checksum "package-lock.json" }}
             - v1-node-modules-
 
-      # Use npm ci for a deterministic, fast install
-      - run:
-          name: Install dependencies (npm ci)
-          command: npm ci
+      # Install dependencies
+      - node/install # use orb's install command (replaces npm ci)
 
       # Save the fresh node_modules for the next run
       - save_cache:
@@ -55,6 +53,11 @@ jobs:
           paths:
             - .
 
+      - store_test_results:
+          path: test-results
+
+      - store_artifacts:
+          path: test-results
 
   # --------------------------------------------------------------
   # 2️⃣ Deploy job – runs **only** on tags that match vX.Y.Z
@@ -100,9 +103,7 @@ jobs:
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
-  version: 2
-
-  test:
+  build-and-test:
     jobs:
       - test:
           filters:
