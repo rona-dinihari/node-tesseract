@@ -32,7 +32,6 @@ jobs:
           command: |
             circleci run release plan \
               --target-version=$(echo $CIRCLE_TAG | sed 's/^v//') \
-              --changelog-entry="Release $CIRCLE_TAG" \
               --notify=true
             exit 0
       # Your job here doing the actual deployment
