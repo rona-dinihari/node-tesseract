@@ -67,12 +67,12 @@ workflows:
     jobs:
       - build
       - deploy:
+          requires: [build]
           filters:
             branches:
               only: main
             tags:
               only: /^v.*/
-            requires: [build]
       - on_success:
           requires: [build, deploy]
       - on_fail:
