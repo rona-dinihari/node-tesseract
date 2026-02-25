@@ -23,59 +23,6 @@ jobs:
             exit 0
       - store_test_results:
           path: test-results
-  mark:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - run:
-          name: Plan a deploy
-          command: |
-            circleci run release plan \
-              --target-version=$(echo $CIRCLE_TAG | sed 's/^v//')
-            exit 0
-      # Your job here doing the actual deployment
-      - run:
-          name: Update a deploy to SUCCESS
-          command: circleci run release update --status=SUCCESS
-          when: on_success
-      - run:
-          name: Update planned deploy to FAILED
-          command: circleci run release update --status=FAILED
-          when: on_fail
-  deploy:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - checkout
-      - run:
-          name: "Install dependencies & publish to npmjs.com."
-          context: dawnsparks-node-tesseract
-          command: |
-            npm ci
-            npm publish
-            exit 0
-  on_success:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - run:
-          name: "Update a deploy to SUCCESS"
-          context: dawnsparks-node-tesseract
-          command: |
-            circleci run release update \
-              --status=SUCCESS
-          when: on_success
-  on_fail:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - run:
-          name: "Update planned deploy to FAILED"
-          context: dawnsparks-node-tesseract
-          command: |
-            circleci run release update \
-              --status=FAILED
-          when: on_fail
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
@@ -83,23 +30,3 @@ workflows:
   test-workflow:
     jobs:
       - test
-  mark-workflow:
-    jobs:
-      - mark:
-          filters:
-            branches:
-              only: staging
-            tags:
-              only: /^v.*/
-  deployment-workflow:
-    jobs:
-      - deploy:
-          filters:
-            branches:
-              only: main
-            tags:
-              only: /^v.*/
-      - on_success:
-          requires: [deploy]
-      - on_fail:
-          requires: [deploy]
