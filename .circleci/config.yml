@@ -27,26 +27,41 @@ jobs:
       - run:
           name: "Install dependencies & publish to npmjs.com."
           context: dawnsparks-node-tesseract
-          context: dawnsparks-node-tesseract
           command: npm ci && npm publish
+  on_success:
+    docker:
+      - image: cimg/node:lts
+    steps:
+      - run:
+          name: "Update a deploy to SUCCESS"
+          command: circleci run release update --status=SUCCESS
+          when: on_success
+  on_fail:
+    docker:
+      - image: cimg/node:lts
+    steps:
+      - run:
+          name: "Update planned deploy to FAILED"
+          command: circleci run release update --status=FAILED
+          when: on_fail
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
   test-workflow:
     jobs:
-      - build_and_test
+      - build_and_test:
+          context: dawnsparks-node-tesseract # Ensure context includes release logic
       - on_success:
-          context: dawnsparks-node-tesseract  # Ensure context includes release logic
-          requires: build_and_test
+          requires: [build_and_test]
       - on_fail:
-          requires: build_and_test
+          requires: [build_and_test]
   deployment-workflow:
     when: pipeline.git.branch == "main"
     jobs:
       - deploy:
-          context: dawnsparks-node-tesseract  # Ensure context includes release logic
+          context: dawnsparks-node-tesseract # Ensure context includes release logic
       - on_success:
-          requires: deploy
+          requires: [deploy]
       - on_fail:
-          requires: deploy
+          requires: [deploy]
