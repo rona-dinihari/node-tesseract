@@ -84,14 +84,23 @@ workflows:
   test-workflow:
     jobs:
       - test
-  mark-deployment-workflow:
+  mark-workflow:
+    name: "Test Workflow"
+    parameters:
+      release:
+        type: string
+        default: "dawnsparks-node-tesseract"
     jobs:
-      - mark:
+      - test:
           filters:
             branches:
               only: development
             tags:
               only: /^v.*/
+      - on_success:
+          requires: [test]
+      - on_fail:
+          requires: [test]
   deployment-workflow:
     jobs:
       - deploy:
