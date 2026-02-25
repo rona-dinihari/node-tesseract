@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    circleci.com/project-id: $CIRCLE_PROJECT_ID
+    labels:
+        circleci.com/component-name: node-tesseract-deployment
+        circleci.com/version: 1.0.0
+    name: node-tesseract-deployment
+    namespace: default
+spec:
+    selector:
+      matchLabels:
+    template:
+        metadata:
+            labels:
+                circleci.com/component-name: node-tesseract-deployment
+                circleci.com/version: 1.0.0
