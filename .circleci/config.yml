@@ -82,11 +82,9 @@ jobs:
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
   test-workflow:
-    name: "Test Workflow"
     jobs:
       - test
   mark-workflow:
-    name: "Mark Workflow"
     jobs:
       - mark:
           filters:
@@ -95,7 +93,6 @@ workflows:
             tags:
               only: /^v.*/
   deployment-workflow:
-    name: "Deployment Workflow"
     jobs:
       - deploy:
           filters:
