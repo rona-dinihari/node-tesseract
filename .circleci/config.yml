@@ -23,6 +23,26 @@ jobs:
             exit 0
       - store_test_results:
           path: test-results
+  mark:
+    docker:
+      - image: cimg/node:lts
+    steps:
+      - run:
+          name: Plan a deploy
+          command: |
+            circleci run release plan \
+              --environment-name="npm" \
+              --component-name="huedawn-node-teserract" \
+              --target-version="${{ pipeline.git.tag }}"
+      # Your job here doing the actual deployment
+      - run:
+          name: Update a deploy to SUCCESS
+          command: circleci run release update --status=SUCCESS
+          when: on_success
+      - run:
+          name: Update planned deploy to FAILED
+          command: circleci run release update --status=FAILED
+          when: on_fail
   deploy:
     docker:
       - image: cimg/node:lts
@@ -64,6 +84,14 @@ workflows:
   test-workflow:
     jobs:
       - test
+  mark-workflow:
+    jobs:
+      - mark:
+          filters:
+            branches:
+              only: development
+            tags:
+              only: /^v.*/
   deployment-workflow:
     jobs:
       - deploy:
