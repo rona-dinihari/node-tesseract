@@ -5,7 +5,7 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
-  build_and_test:
+  build:
     docker:
       - image: cimg/node:lts
     steps:
@@ -13,12 +13,18 @@ jobs:
       - run:
           name: "Install dependencies, and run tests."
           context: dawnsparks-node-tesseract
-          command: |
-            # touch ~/.npmrc
-            # echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN" >> ~/.npmrc
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-            npm ci
-            npm test
+          command: npm ci && npm test
+  test:
+    docker:
+      - image: cimg/node:lts
+    steps:
+      - checkout
+      - run:
+          name: "Install dependencies, and run tests."
+          context: dawnsparks-node-tesseract
+          command: npm ci && npm test
+      - store_test_results:
+          path: test-results
   deploy:
     docker:
       - image: cimg/node:lts
@@ -50,18 +56,20 @@ jobs:
 workflows:
   test-workflow:
     jobs:
-      - build_and_test:
-          context: dawnsparks-node-tesseract # Ensure context includes release logic
+      - build
+      - test:
+          requires: [build]
       - on_success:
-          requires: [build_and_test]
+          requires: [build, test]
       - on_fail:
-          requires: [build_and_test]
+          requires: [build, test]
   deployment-workflow:
-    when: pipeline.git.branch == "main"
+    when: pipeline.git.branch == "main" && pipeline.git.tag =~ /^v\d+\.\d+\.\d+(-\S*)?$/
     jobs:
+      - build
       - deploy:
-          context: dawnsparks-node-tesseract # Ensure context includes release logic
+          requires: [build]
       - on_success:
-          requires: [deploy]
+          requires: [build, deploy]
       - on_fail:
-          requires: [deploy]
+          requires: [build, deploy]
