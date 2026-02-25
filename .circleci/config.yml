@@ -11,13 +11,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Install tesseract OCR."
-          command: |
-            sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y apt-transport-https
-            echo "deb https://notesalexp.org/tesseract-ocr5/$(lsb_release -cs)/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/notesalexp.list > /dev/null
-            wget -O - https://notesalexp.org/debian/alexp_key.asc | sudo apt-key add -
-            sudo apt-get update && sudo apt-get install -y tesseract-ocr
-      - run:
           name: "Install dependencies, and run tests."
           context: dawnsparks-node-tesseract
           command: |
@@ -32,45 +25,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Install tesseract OCR."
-          command: |
-            sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y apt-transport-https
-            echo "deb https://notesalexp.org/tesseract-ocr5/$(lsb_release -cs)/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/notesalexp.list > /dev/null
-            wget -O - https://notesalexp.org/debian/alexp_key.asc | sudo apt-key add -
-            sudo apt-get update && sudo apt-get install -y tesseract-ocr
-      - run:
-          name: "Install dependencies, run tests, and publish package."
+          name: "Install dependencies & publish to npmjs.com."
           context: dawnsparks-node-tesseract
-          command: |
-            # touch ~/.npmrc
-            # echo "//npm.pkg.github.com/:_authToken=$GITHUB_TOKEN" >> ~/.npmrc
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-            npm ci
-            npm publish
-      - run:
-          name: "Deploy to npmjs.com."
           context: dawnsparks-node-tesseract
-          command: |
-            circleci run release plan \
-              --environment-name="npm" \
-              --component-name="<component-name>" \
-              --target-version="<some-version-name>"
-  on_success:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - run:
-          name: "Update a deploy to SUCCESS"
-          command: circleci run release update --status=SUCCESS 
-          when: on_success
-  on_fail:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - run:
-          name: "Update planned deploy to FAILED"
-          command: circleci run release update --status=FAILED
-          when: on_fail
+          command: npm ci && npm publish
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
@@ -78,11 +36,17 @@ workflows:
   test-workflow:
     jobs:
       - build_and_test
-      - on_success
-      - on_fail
+      - on_success:
+          context: dawnsparks-node-tesseract  # Ensure context includes release logic
+          requires: build_and_test
+      - on_fail:
+          requires: build_and_test
   deployment-workflow:
     when: pipeline.git.branch == "main"
     jobs:
-      - deploy
-      - on_success
-      - on_fail
+      - deploy:
+          context: dawnsparks-node-tesseract  # Ensure context includes release logic
+      - on_success:
+          requires: deploy
+      - on_fail:
+          requires: deploy
