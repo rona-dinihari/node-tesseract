@@ -11,6 +11,13 @@ jobs:
     steps:
       - checkout
       - run:
+          name: "Install tesseract OCR."
+          command: |
+            sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y apt-transport-https
+            echo "deb https://notesalexp.org/tesseract-ocr5/$(lsb_release -cs)/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/notesalexp.list > /dev/null
+            wget -O - https://notesalexp.org/debian/alexp_key.asc | sudo apt-key add -
+            sudo apt-get update && sudo apt-get install -y tesseract-ocr
+      - run:
           name: "Install dependencies, and run tests."
           context: dawnsparks-node-tesseract
           command: npm ci && npm test
