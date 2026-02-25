@@ -32,8 +32,10 @@ jobs:
           command: |
             circleci run release plan \
               --environment-name="npm" \
-              --component-name="huedawn-node-teserract" \
-              --target-version="${{ pipeline.git.tag }}"
+              --component-name="huedawn-node-tesseract" \
+              --target-version="{tag}".format(tag=${{ pipeline.git.tag }}) \
+              --description="Release {tag}".format(tag=${{ pipeline.git.tag }})
+            exit 0
       # Your job here doing the actual deployment
       - run:
           name: Update a deploy to SUCCESS
