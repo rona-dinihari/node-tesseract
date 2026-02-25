@@ -64,10 +64,6 @@ workflows:
   test-workflow:
     jobs:
       - test
-      - on_success:
-          requires: [test]
-      - on_fail:
-          requires: [test]
   deployment-workflow:
     jobs:
       - deploy:
