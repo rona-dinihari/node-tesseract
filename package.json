@@ -17,7 +17,6 @@
     "url": "git+https://github.com/rona-dinihari/node-tesseract.git"
   },
   "license": "MIT",
-  "author": "Rona Dini Hari <hari.ronadini@gmail.com>",
   "type": "commonjs",
   "main": "index.js",
   "directories": {
