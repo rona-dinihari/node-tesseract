@@ -5,27 +5,15 @@ version: 2.1
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
-  build:
+  test:
     docker:
       - image: cimg/node:lts
     steps:
       - checkout
       - run:
           name: "Install tesseract OCR."
-          command: |
-            sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y apt-transport-https
-            echo "deb https://notesalexp.org/tesseract-ocr5/$(lsb_release -cs)/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/notesalexp.list > /dev/null
-            wget -O - https://notesalexp.org/debian/alexp_key.asc | sudo apt-key add -
-            sudo apt-get update && sudo apt-get install -y tesseract-ocr
-      - run:
-          name: "Install dependencies, and run tests."
           context: dawnsparks-node-tesseract
-          command: npm ci && npm test
-  test:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - checkout
+          command: sudo apt-get update && sudo apt-get install -y tesseract-ocr
       - run:
           name: "Install dependencies, and run tests."
           context: dawnsparks-node-tesseract
@@ -63,24 +51,20 @@ jobs:
 workflows:
   test-workflow:
     jobs:
-      - build
-      - test:
-          requires: [build]
+      - test
       - on_success:
-          requires: [build, test]
+          requires: [test]
       - on_fail:
-          requires: [build, test]
+          requires: [test]
   deployment-workflow:
     jobs:
-      - build
       - deploy:
-          requires: [build]
           filters:
             branches:
               only: main
             tags:
               only: /^v.*/
       - on_success:
-          requires: [build, deploy]
+          requires: [deploy]
       - on_fail:
-          requires: [build, deploy]
+          requires: [deploy]
