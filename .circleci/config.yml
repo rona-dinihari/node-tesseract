@@ -64,7 +64,7 @@ workflows:
       - on_fail:
           requires: [build, test]
   deployment-workflow:
-    when: pipeline.git.branch == "main" && pipeline.git.tag =~ /^v\d+\.\d+\.\d+(-\S*)?$/
+    when: and(pipeline.git.branch == "main", pipeline.git.tag =~ /^v\d+\.\d+\.\d+(-\S*)?$/)
     jobs:
       - build
       - deploy:
