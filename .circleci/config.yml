@@ -91,7 +91,7 @@ workflows:
       - mark:
           filters:
             branches:
-              only: development
+              only: staging
             tags:
               only: /^v.*/
   deployment-workflow:
