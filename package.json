@@ -1,5 +1,5 @@
 {
-  "name": "@rona-dinihari/dawnsparks-node-tesseract",
+  "name": "dawnsparks-node-tesseract",
   "version": "0.4.12",
   "author": "Rona Dini Hari <hari.ronadini@gmail.com>",
   "description": "A fork of a simple wrapper for the Tesseract OCR package",
