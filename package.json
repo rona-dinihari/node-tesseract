@@ -1,6 +1,6 @@
 {
   "name": "@rona-dinihari/dawnsparks-node-tesseract",
-  "version": "0.4.10",
+  "version": "0.4.11",
   "author": "Rona Dini Hari <hari.ronadini@gmail.com>",
   "description": "A fork of a simple wrapper for the Tesseract OCR package",
   "keywords": [
@@ -10,14 +10,15 @@
   ],
   "homepage": "https://github.com/rona-dinihari/node-tesseract#readme",
   "bugs": {
-    "url": "https://github.com/rona-dinihari/node-tesseract/issues"
+    "url": "https://github.com/rona-dinihari/node-tesseract/issues",
+    "email": "hari.ronadini@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rona-dinihari/node-tesseract.git"
+    "url": "https://github.com/rona-dinihari/node-tesseract.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
+    "registry": "https://registry.npmjs.org/",
     "ignore": [
       ".circleci/",
       ".github/",
