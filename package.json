@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rona-dinihari/node-tesseract.git"
+    "url": "git+https://github.com/rona-dinihari/node-tesseract.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

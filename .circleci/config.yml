@@ -28,15 +28,15 @@ jobs:
       - image: cimg/node:lts
     steps:
       - run:
-          name: Plan a deploy
+          name: Plan a publish
           context: dawnsparks-node-tesseract
           command: |
-            echo "Planning a deploy for version $(echo $pipeline.git.tag) to npmjs.com."
+            echo "Planning a publish for version $(echo $pipeline.git.tag) to npmjs.com."
             circleci run release plan npmjs \
               --environment-name="huedawn-node-tesseract" \
               --target-version=$(echo $pipeline.git.tag)
             exit 0
-  deploy:
+  publish:
     docker:
       - image: cimg/node:lts
     steps:
@@ -46,6 +46,7 @@ jobs:
           context: dawnsparks-node-tesseract
           command: |
             npm ci
+            npm set //registry.npmjs.org/:_authToken=$NPM_TOKEN
             npm publish
             exit 0
   on_success:
@@ -53,7 +54,7 @@ jobs:
       - image: cimg/node:lts
     steps:
       - run:
-          name: "Update a deploy to SUCCESS"
+          name: "Update a publish to SUCCESS"
           context: dawnsparks-node-tesseract
           command: |
             circleci run release update npmjs --status=SUCCESS
@@ -63,7 +64,7 @@ jobs:
       - image: cimg/node:lts
     steps:
       - run:
-          name: "Update planned deploy to FAILED"
+          name: "Update planned publish to FAILED"
           context: dawnsparks-node-tesseract
           command: |
             circleci run release update npmjs --status=FAILED
@@ -82,16 +83,16 @@ workflows:
             branches:
               only: development
             tags:
-              only: /^v.*/
-  deployment-workflow:
+              only: /v[0-9]+(\.[0-9]+)*/
+  publish-workflow:
     jobs:
-      - deploy:
+      - publish:
           filters:
             branches:
               only: main
             tags:
-              only: /^v.*/
+              only: /v[0-9]+(\.[0-9]+)*/
       - on_success:
-          requires: [deploy]
+          requires: [publish]
       - on_fail:
-          requires: [deploy]
+          requires: [publish]
