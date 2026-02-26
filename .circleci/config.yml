@@ -31,7 +31,7 @@ jobs:
           name: Plan a deploy
           context: dawnsparks-node-tesseract
           command: |
-            circleci run release plan \
+            circleci run release plan npmjs \
               --environment-name="huedawn-node-tesseract" \
               --target-version=$(echo $CIRCLE_TAG)
             exit 0
@@ -55,7 +55,7 @@ jobs:
           name: "Update a deploy to SUCCESS"
           context: dawnsparks-node-tesseract
           command: |
-            circleci run release update --status=SUCCESS
+            circleci run release update npmjs --status=SUCCESS
           when: on_success
   on_fail:
     docker:
@@ -65,7 +65,7 @@ jobs:
           name: "Update planned deploy to FAILED"
           context: dawnsparks-node-tesseract
           command: |
-            circleci run release update --status=FAILED
+            circleci run release update npmjs --status=FAILED
           when: on_fail
 
 # Orchestrate jobs using workflows
