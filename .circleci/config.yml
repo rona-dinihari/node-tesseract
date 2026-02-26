@@ -32,9 +32,8 @@ jobs:
           context: dawnsparks-node-tesseract
           command: |
             circleci run release plan \
-              --environment-name="npm" \
-              --component-name="huedawn-node-tesseract" \
-              --target-version=$CIRCLE_TAG
+              --environment-name="huedawn-node-tesseract" \
+              --target-version=$(echo $CIRCLE_TAG)
             exit 0
   deploy:
     docker:
