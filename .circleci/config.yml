@@ -31,10 +31,10 @@ jobs:
           name: Plan a publish
           context: dawnsparks-node-tesseract
           command: |
-            echo "Planning a publish for version $(echo $pipeline.git.tag) to npmjs.com."
+            echo "Planning a publish for version $CIRCLE_TAG to npmjs.com."
             circleci run release plan npmjs \
               --environment-name="huedawn-node-tesseract" \
-              --target-version=$(echo $pipeline.git.tag)
+              --target-version=$CIRCLE_TAG
             exit 0
   publish:
     docker:
