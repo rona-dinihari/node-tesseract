@@ -46,9 +46,8 @@ jobs:
           context: dawnsparks-node-tesseract
           command: |
             npm ci
-            npm set //registry.npmjs.org/:_authToken=$NPM_TOKEN
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
             npm publish
-            exit 0
   on_success:
     docker:
       - image: cimg/node:lts
