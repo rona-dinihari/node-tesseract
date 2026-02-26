@@ -34,8 +34,7 @@ jobs:
             circleci run release plan \
               --environment-name="npm" \
               --component-name="huedawn-node-tesseract" \
-              --target-version=$CIRCLE_TAG \
-              --description="Release $CIRCLE_TAG to npmjs.com."
+              --target-version=$CIRCLE_TAG
             exit 0
   deploy:
     docker:
