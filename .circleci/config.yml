@@ -31,9 +31,10 @@ jobs:
           name: Plan a deploy
           context: dawnsparks-node-tesseract
           command: |
+            echo "Planning a deploy for version $(echo $pipeline.git.tag) to npmjs.com."
             circleci run release plan npmjs \
               --environment-name="huedawn-node-tesseract" \
-              --target-version=$(echo $CIRCLE_TAG)
+              --target-version=$(echo $pipeline.git.tag)
             exit 0
   deploy:
     docker:
