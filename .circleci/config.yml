@@ -48,27 +48,6 @@ jobs:
             npm ci
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
             npm publish
-  on_success:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - run:
-          name: "Update a publish to SUCCESS"
-          context: dawnsparks-node-tesseract
-          command: |
-            circleci run release update npmjs --status=SUCCESS
-          when: on_success
-  on_fail:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - run:
-          name: "Update planned publish to FAILED"
-          context: dawnsparks-node-tesseract
-          command: |
-            circleci run release update npmjs --status=FAILED
-          when: on_fail
-
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
@@ -91,7 +70,3 @@ workflows:
               only: main
             tags:
               only: /v[0-9]+(\.[0-9]+)*/
-      - on_success:
-          requires: [publish]
-      - on_fail:
-          requires: [publish]
