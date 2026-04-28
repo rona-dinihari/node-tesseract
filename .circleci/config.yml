@@ -31,10 +31,10 @@ jobs:
           name: Plan a publish
           context: dawnsparks-node-tesseract
           command: |
-            echo "Planning a publish for version $(echo $pipeline.git.tag) to npmjs.com."
+            echo "Planning a publish for version $CIRCLE_TAG to npmjs.com."
             circleci run release plan npmjs \
-              --environment-name="huedawn-node-tesseract" \
-              --target-version=$(echo $pipeline.git.tag)
+              --environment-name="dawnsparks-node-tesseract" \
+              --target-version=$CIRCLE_TAG
             exit 0
   publish:
     docker:
@@ -48,27 +48,6 @@ jobs:
             npm ci
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
             npm publish
-  on_success:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - run:
-          name: "Update a publish to SUCCESS"
-          context: dawnsparks-node-tesseract
-          command: |
-            circleci run release update npmjs --status=SUCCESS
-          when: on_success
-  on_fail:
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - run:
-          name: "Update planned publish to FAILED"
-          context: dawnsparks-node-tesseract
-          command: |
-            circleci run release update npmjs --status=FAILED
-          when: on_fail
-
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
@@ -80,7 +59,7 @@ workflows:
       - mark:
           filters:
             branches:
-              only: development
+              ignore: /.*/
             tags:
               only: /v[0-9]+(\.[0-9]+)*/
   publish-workflow:
@@ -91,7 +70,3 @@ workflows:
               only: main
             tags:
               only: /v[0-9]+(\.[0-9]+)*/
-      - on_success:
-          requires: [publish]
-      - on_fail:
-          requires: [publish]

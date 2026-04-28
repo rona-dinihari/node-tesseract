@@ -1,6 +1,6 @@
 {
   "name": "dawnsparks-node-tesseract",
-  "version": "0.4.14",
+  "version": "0.4.15",
   "author": "Rona Dini Hari <hari.ronadini@gmail.com>",
   "description": "A fork of a simple wrapper for the Tesseract OCR package",
   "keywords": [
@@ -40,7 +40,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "glob": "^9.3.5",
+    "glob": "^12.0.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
