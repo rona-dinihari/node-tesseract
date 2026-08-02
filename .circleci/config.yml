@@ -73,6 +73,13 @@ workflows:
               only: /v[0-9]+(\.[0-9]+)*/
   publish-workflow:
     jobs:
+      - mark:
+          context: dawnsparks-node-tesseract
+          filters:
+            branches:
+              only: main
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
       - publish:
           context: dawnsparks-node-tesseract
           filters:
