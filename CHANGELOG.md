@@ -2,9 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.4.17
+
+- Build script update
+
 ## 0.4.16
 
-- Security update.
+- Security update
 
 ## 0.4.15
 
