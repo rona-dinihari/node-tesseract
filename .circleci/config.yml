@@ -2,6 +2,9 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
+orbs:
+  sonarcloud: sonarsource/sonarcloud@4.0.0
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
@@ -10,6 +13,7 @@ jobs:
       - image: cimg/node:lts
     steps:
       - checkout
+      - sonarcloud/scan
       - run:
           name: "Install tesseract OCR."
           context: dawnsparks-node-tesseract
@@ -19,6 +23,7 @@ jobs:
           context: dawnsparks-node-tesseract
           command: |
             npm ci
+            npm run prepack
             npm test
             exit 0
       - store_test_results:
@@ -46,6 +51,7 @@ jobs:
           context: dawnsparks-node-tesseract
           command: |
             npm ci
+            npm run prepack
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
             npm publish
 # Orchestrate jobs using workflows
@@ -53,7 +59,13 @@ jobs:
 workflows:
   test-workflow:
     jobs:
-      - test
+      - test:
+          context: sonarcloud
+          filters:
+            branches:
+              only: development
+            tags:
+              ignore: /v[0-9]+(\.[0-9]+)*/
   mark-workflow:
     jobs:
       - mark:
