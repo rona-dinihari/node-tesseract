@@ -2,6 +2,9 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
+orbs:
+  sonarcloud: sonarsource/sonarcloud@4.0.0
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
@@ -10,6 +13,7 @@ jobs:
       - image: cimg/node:lts
     steps:
       - checkout
+      - sonarcloud/scan
       - run:
           name: "Install tesseract OCR."
           context: dawnsparks-node-tesseract
@@ -56,6 +60,7 @@ workflows:
   test-workflow:
     jobs:
       - test:
+          context: sonarcloud
           filters:
             branches:
               only: development
