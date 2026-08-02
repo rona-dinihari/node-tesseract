@@ -2,9 +2,6 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
-orbs:
-  sonarcloud: sonarsource/sonarcloud@4.0.0
-
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
@@ -50,13 +47,17 @@ jobs:
             npm run prepack
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
             npm publish
+
+orbs:
+  sonarcloud: sonarsource/sonarcloud@2.0.0
+
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
   test-workflow:
     jobs:
       - test:
-          context: sonarcloud
+          context: SonarCloud
           filters:
             branches:
               only: development
