@@ -2,6 +2,9 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
+orbs:
+  sonarcloud: sonarsource/sonarcloud@4.0.0
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/jobs-steps/#jobs-overview & https://circleci.com/docs/configuration-reference/#jobs
 jobs:
@@ -10,7 +13,6 @@ jobs:
       - image: cimg/node:lts
     steps:
       - checkout
-      - sonarcloud/scan
       - run:
           name: "Install tesseract OCR."
           command: sudo apt-get update && sudo apt-get install -y tesseract-ocr
@@ -21,6 +23,7 @@ jobs:
             npm run prepack
             npm test
             exit 0
+      - sonarcloud/scan
       - store_test_results:
           path: test-results
   mark:
@@ -48,16 +51,13 @@ jobs:
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
             npm publish
 
-orbs:
-  sonarcloud: sonarsource/sonarcloud@4.0.0
-
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/workflows/ & https://circleci.com/docs/configuration-reference/#workflows
 workflows:
   test-workflow:
     jobs:
       - test:
-          context: SonarCloud
+          context: sonarcloud
           filters:
             branches:
               only: development
