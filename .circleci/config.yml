@@ -16,11 +16,9 @@ jobs:
       - sonarcloud/scan
       - run:
           name: "Install tesseract OCR."
-          context: dawnsparks-node-tesseract
           command: sudo apt-get update && sudo apt-get install -y tesseract-ocr
       - run:
           name: "Install dependencies, and run tests."
-          context: dawnsparks-node-tesseract
           command: |
             npm ci
             npm run prepack
@@ -34,7 +32,6 @@ jobs:
     steps:
       - run:
           name: Plan a publish
-          context: dawnsparks-node-tesseract
           command: |
             echo "Planning a publish for version $CIRCLE_TAG to npmjs.com."
             circleci run release plan npmjs \
@@ -48,7 +45,6 @@ jobs:
       - checkout
       - run:
           name: "Install dependencies & publish to npmjs.com."
-          context: dawnsparks-node-tesseract
           command: |
             npm ci
             npm run prepack
@@ -69,6 +65,7 @@ workflows:
   mark-workflow:
     jobs:
       - mark:
+          context: dawnsparks-node-tesseract
           filters:
             branches:
               ignore: /.*/
@@ -77,6 +74,7 @@ workflows:
   publish-workflow:
     jobs:
       - publish:
+          context: dawnsparks-node-tesseract
           filters:
             branches:
               only: main
