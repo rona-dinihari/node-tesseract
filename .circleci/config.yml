@@ -19,8 +19,10 @@ jobs:
           context: dawnsparks-node-tesseract
           command: |
             npm ci
+            npm run prepack
             npm test
             exit 0
+      - sonarcloud/scan
       - store_test_results:
           path: test-results
   mark:
@@ -46,6 +48,7 @@ jobs:
           context: dawnsparks-node-tesseract
           command: |
             npm ci
+            npm run prepack
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
             npm publish
 # Orchestrate jobs using workflows
@@ -53,7 +56,12 @@ jobs:
 workflows:
   test-workflow:
     jobs:
-      - test
+      - test:
+          filters:
+            branches:
+              only: development
+            tags:
+              ignore: /v[0-9]+(\.[0-9]+)*/
   mark-workflow:
     jobs:
       - mark:
