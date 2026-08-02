@@ -47,7 +47,6 @@ jobs:
           name: "Install dependencies & publish to npmjs.com."
           command: |
             npm ci
-            npm run prepack
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
             npm publish
 

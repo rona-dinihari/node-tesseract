@@ -19,14 +19,8 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
-    "ignore": [
-      ".circleci/",
-      ".github/",
-      ".vscode/",
-      "!build/",
-      "src/",
-      "test/"
-    ]
+    "directory": "lib",
+    "access": "public"
   },
   "license": "MIT",
   "type": "commonjs",

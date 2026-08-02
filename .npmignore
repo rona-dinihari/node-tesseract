@@ -1,3 +1,4 @@
+# Rules from: C:\Users\rona\Projects\node-tesseract\.gitignore
 # Logs
 logs
 *.log
@@ -128,3 +129,15 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# npmignore
+.npmignore
+
+# npmignore - content above this line is automatically generated and modifications may be omitted
+# see npmjs.com/npmignore for more details.
+.circleci/
+.github/
+.vscode/
+!build/
+src/
+test/
