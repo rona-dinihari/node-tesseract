@@ -22,7 +22,6 @@ jobs:
             npm run prepack
             npm test
             exit 0
-      - sonarcloud/scan
       - store_test_results:
           path: test-results
   mark:
