@@ -68,9 +68,9 @@ workflows:
           context: dawnsparks-node-tesseract
           filters:
             branches:
-              ignore: /.*/
+              only: main
             tags:
-              only: /v[0-9]+(\.[0-9]+)*/
+              only: /.*/
   publish-workflow:
     jobs:
       - publish:
