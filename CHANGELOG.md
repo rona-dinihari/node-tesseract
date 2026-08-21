@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.4.29
+
+- feat: add SonarLint configuration for connected mode
+- fix: update mocha version to 10.8.2 in package.json and package-lock.json
+
 ## 0.4.28
 
 - Security update
