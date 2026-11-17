@@ -1,0 +1,57 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@6.1.0
+
+jobs:
+  test:
+    docker:
+      - image: cimg/node:20.19
+    steps:
+      - checkout
+      - run:
+          name: Install Tesseract OCR
+          command: sudo apt-get update && sudo apt-get install -y tesseract-ocr
+      - node/install-packages:
+          pkg-manager: npm
+          override-ci-command: npm ci --ignore-scripts
+      - run:
+          name: Run tests
+          command: npm test
+
+  publish:
+    docker:
+      - image: cimg/node:20.19
+    steps:
+      - checkout
+      - run:
+          name: Install Tesseract OCR
+          command: sudo apt-get update && sudo apt-get install -y tesseract-ocr
+      - node/install-packages:
+          pkg-manager: npm
+          override-ci-command: npm ci --ignore-scripts
+      - run:
+          name: Run tests
+          command: npm test
+      - run:
+          name: Publish to npm
+          command: npm publish
+          environment:
+            NODE_AUTH_TOKEN: $NPM_TOKEN
+
+workflows:
+  ci:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore: /^$/  # run on all branches
+
+  release:
+    jobs:
+      - publish:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
