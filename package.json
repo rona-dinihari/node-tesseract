@@ -40,6 +40,9 @@
     "npmignore": "^0.3.5",
     "should": "~2.1.1"
   },
+  "overrides": {
+    "minimatch": "11.0.9"
+  },
   "engine": {
     "node": ">=0.6"
   }
