@@ -6,6 +6,7 @@ A simple wrapper for the Tesseract OCR package for node.js
 
 [![Quality gate status](https://sonarcloud.io/api/project_badges/measure?project=rona-dinihari_node-tesseract&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=rona-dinihari_node-tesseract)
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/rona-dinihari/node-tesseract/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/rona-dinihari/node-tesseract/tree/main)
+[![Publish Package](https://github.com/rona-dinihari/node-tesseract/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/rona-dinihari/node-tesseract/actions/workflows/npm-publish.yml)
 
 ## Requirements
 
