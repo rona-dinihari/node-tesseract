@@ -29,7 +29,7 @@ jobs:
         id: auth
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@59202af334b4ba7b5db01b701b8e79f8b3bef0f4 # v8.5.0
-       with:
+        with:
           args: >
             -Dsonar.organization=karya-lepas-apps-1
             -Dsonar.projectKey=rona-dinihari_node-tesseract
